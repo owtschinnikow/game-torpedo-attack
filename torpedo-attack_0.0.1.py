@@ -39,8 +39,8 @@ def draw_day_sea(screen_size):
                      [0, screen_size[1] - screen_size[1]/3,
                       screen_size[0], screen_size[1]])
 
-grid_submarine_rect = pygame.Rect(screen_size[0], screen_size[1], 0, 0)
 
+grid_submarine_rect = pygame.Rect(screen_size[0], screen_size[1], 0, 0)
 def draw_grid_submarine(grid_submarine_rect):
     # Draw on the screen a GREEN line from (0, 0) to (50, 30)
     # 5 pixels wide.
@@ -72,6 +72,7 @@ def draw_grid_submarine(grid_submarine_rect):
                          [grid_submarine_rect[0]/2 - i*10, grid_submarine_rect[1] - grid_submarine_rect[1]/4 + grid_submarine_rect[1]],
                          2)
 
+
 def move_grid_submarine():
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT and grid_submarine_rect[0] > 0:
@@ -80,28 +81,62 @@ def move_grid_submarine():
             grid_submarine_rect.move_ip(20, 0)
 
 
+def move_tortedo():
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_LEFT and grid_submarine_rect[0] > 0:
+            grid_submarine_rect.move_ip(-20, 0)
+        elif event.key == pygame.K_RIGHT and grid_submarine_rect[0] < screen_size[0] * 2:
+            grid_submarine_rect.move_ip(20, 0)
+
+torpedo_rect = grid_submarine_rect
+def draw_torpedo(torpedo_rect):
+    """
+    Draw some torpedo on the screen
+    :param grid_submarine_rect:
+    :return: torpedo
+    """
+    pygame.draw.rect(screen,
+                     Navy,
+                     [torpedo_rect[0]/2,
+                      torpedo_rect[1],
+                      0,
+                      -10], 2)
+
 #Loop until the user clicks the close button.
 done = False
 clock = pygame.time.Clock()
 
-while not done:
+torpedo = []
 
+while not done:
     # This limits the while loop to a max of FPS.
     clock.tick(FPS)
-
+    # Made screen with sky
     screen.fill(LightSkyBlue)
-
+    # Draw objects
     draw_day_sea(screen_size)
     draw_grid_submarine(grid_submarine_rect)
 
+    torpedo = []
+    # Chek game QUIT
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            print("draw_torpedo")
+            torpedo.append([draw_torpedo(torpedo_rect)])
+
+        # Move grid of submarin
+        move_grid_submarine()
+    print(torpedo)
 
 
-    move_grid_submarine()
+
+
+
 
     pygame.display.flip()
+
 
 
 pygame.quit()
